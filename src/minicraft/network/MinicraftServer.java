@@ -75,8 +75,6 @@ public class MinicraftServer extends Thread implements MinicraftProtocol {
 		
 		worldPath = Game.gameDir + "/saves/" + WorldSelectDisplay.getWorldName();
 		
-		MultiplayerDisplay.setCustomClients();
-		
 		try {
 			System.out.println("Opening server socket...");
 			socket = new ServerSocket(port);
