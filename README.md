@@ -3,6 +3,9 @@
 On the 20th of August 2021, Chris J. ([chris42](https://github.com/chrisj42)) announced in the [Official Minicraft+ Discord Server](https://discord.gg/JyvFcRBguE) that the multiplayer functionality would be disabled from then on due to bad implementation and login server issues. It was at this point that I decided to make a port to keep multiplayer alive as I consider it's one of minicraft most important features. This is why this repository was created.
 ## Relation with Minicraft+
 This is only a port of [Minicraft+](https://github.com/chrisj42/minicraft-plus-revived), which is developed by the community, by which I mean, I only make sure the multiplayer is working.
+## Getting Started
+If you want to play minicraft+ online, you should create an account [here](https://minicraft.slowflow.ml).
+If you have player Minicraft+ you might see this error: java.lang.IndexOutOfBoundsException: Index: 0, Size: 0. The save schema was modified on this version so you might have to delete or move %appdata%\playminicraft\mods\Minicraft_Plus\Preferences.miniplussave
 ## What are the objectives of this port?
 This port tries to mirror the [Minicraft+ Repository](https://github.com/chrisj42/minicraft-plus-revived) and aims to add support for multiplayer, make it more secure, introduce improvements and fix multiplayer related bugs.
 ## Contributing
