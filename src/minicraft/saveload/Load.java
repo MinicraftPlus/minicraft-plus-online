@@ -299,7 +299,8 @@ public class Load {
 			if(prefVer.compareTo(new Version("2.0.3-dev3")) > 0) {
 				MultiplayerDisplay.savedUUID = data.remove(0);
 				MultiplayerDisplay.savedUsername = data.remove(0);
-				MultiplayerDisplay.savedToken = data.remove(0);
+				if(prefVer.compareTo(new Version("2.0.7net-dev4")) >= 0)
+					MultiplayerDisplay.savedToken = data.remove(0);
 			}
 			
 			if(prefVer.compareTo(new Version("2.0.4-dev3")) >= 0) {
