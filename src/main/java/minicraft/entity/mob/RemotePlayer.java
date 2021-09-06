@@ -1,9 +1,21 @@
 package minicraft.entity.mob;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import minicraft.core.Game;
 import minicraft.core.io.InputHandler;
@@ -15,7 +27,9 @@ import minicraft.gfx.Color;
 import minicraft.gfx.Font;
 import minicraft.gfx.FontStyle;
 import minicraft.gfx.Screen;
+import minicraft.gfx.SpriteSheet;
 import minicraft.level.Level;
+import minicraft.screen.MultiplayerDisplay;
 
 /** This is used for players in multiplayer mode. */
 public class RemotePlayer extends Player implements ClientTickable {
@@ -27,6 +41,7 @@ public class RemotePlayer extends Player implements ClientTickable {
 	
 	private String username = "";
 	private String token = "";
+	private SpriteSheet sprite = null;
 	private final InetAddress ipAddress;
 	private final int port;
 	
@@ -100,7 +115,52 @@ public class RemotePlayer extends Player implements ClientTickable {
 		return moved;
 	}
 	
+	private String GetSkin() {
+		HttpResponse<JsonNode> response = null;
+		
+		try {
+			response = Unirest.post(MultiplayerDisplay.apiDomain+"/fetch-skin")
+				.field("name", username)
+				.asJson();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		
+		if(response != null) {
+			JSONObject json = response.getBody().getObject();
+			if(Game.debug) System.out.println("received json for skin request: " + json.toString());
+			try {
+				switch(json.getString("status")) {
+					case "error":
+						return null;
+					case "success":
+						if(Game.debug) System.out.println("successfully received skin from playminicraft server");
+						return json.getString("skin");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return null;	
+	}
+	
 	public void render(Screen screen) {
+		if (sprite == null) {
+			String Bskin = GetSkin();
+			if (Bskin != null) {
+				BufferedImage os = null;
+				try {
+					os = ImageIO.read(new ByteArrayInputStream(javax.xml.bind.DatatypeConverter.parseBase64Binary(Bskin.split(",")[1])));
+					sprite = new SpriteSheet(os);
+				} catch (IOException e) { e.printStackTrace(); }
+			} else {
+				try {
+					sprite = new SpriteSheet(ImageIO.read(Game.class.getResourceAsStream("/resources/textures/skins.png")));
+				} catch (IOException e) { e.printStackTrace(); }
+			}
+		}
+		screen.setSkinSheet(sprite);
 		super.render(screen);
 		new FontStyle(Color.get(1, 204)).setShadowType(Color.BLACK, true).setXPos(x - Font.textWidth(username)/2).setYPos(y - 20).draw(username, screen); // draw the username of the player above their head
 	}

@@ -1,8 +1,13 @@
 package minicraft.entity.mob;
 
+import minicraft.gfx.SpriteSheet;
+
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +34,7 @@ import minicraft.gfx.MobSprite;
 import minicraft.gfx.Point;
 import minicraft.gfx.Rectangle;
 import minicraft.gfx.Screen;
+import minicraft.gfx.SpriteSheet;
 import minicraft.item.ArmorItem;
 import minicraft.item.FishingData;
 import minicraft.item.FishingRodItem;
@@ -115,7 +121,6 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	private static MobSprite[][] CustomSkincarrySprites = MobSprite.compilePlayerSpriteAnimations(0, 2); // The sprites while carrying something.
 	private static MobSprite[][] CustomSkinsuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 0); // The "airwizard suit" sprites.
 	private static MobSprite[][] CustomSkincarrySuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 2); // The "airwizard suit" sprites.
-
 
 	private Inventory inventory;
 	
@@ -824,37 +829,48 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	public void render(Screen screen) {
 
 		MobSprite[][] spriteSet;
-
-		if (selectedSkin() == SkinDisplay.DEFAULT_SKIN) {
-			sprites = Defaultsprites;
-			carrySuitSprites = DefaultcarrySuitSprites;
-			carrySprites = DefaultcarrySprites;
-			suitSprites = DefaultsuitSprites;
-		}
-		else if (selectedSkin() == SkinDisplay.CAPE_SKIN) {
-			sprites = Capesprites;
-			carrySuitSprites = CapecarrySuitSprites;
-			carrySprites = CapecarrySprites;
-			suitSprites = CapesuitSprites;
-		}
-		else if (selectedSkin() == SkinDisplay.FAMILIARBOY_SKIN) {
-			sprites = FamiliarBoysprites;
-			carrySuitSprites = FamiliarBoycarrySuitSprites;
-			carrySprites = FamiliarBoycarrySprites;
-			suitSprites = FamiliarBoysuitSprites;
-		}
-
-		else if (selectedSkin() == SkinDisplay.FAMILIARGIRL_SKIN) {
-			sprites = FamiliarGirlsprites;
-			carrySuitSprites = FamiliarGirlcarrySuitSprites;
-			carrySprites = FamiliarGirlcarrySprites;
-			suitSprites = FamiliarGirlsuitSprites;
-		}
-		else if (selectedSkin() == SkinDisplay.CUSTOM_SKIN) {
+		
+		if (this instanceof RemotePlayer) {
+			
 			sprites = CustomSkinsprites;
 			carrySuitSprites = CustomSkincarrySuitSprites;
 			carrySprites = CustomSkincarrySprites;
 			suitSprites = CustomSkinsuitSprites;
+			
+		} else {
+			
+			if (selectedSkin() == SkinDisplay.DEFAULT_SKIN) {
+				sprites = Defaultsprites;
+				carrySuitSprites = DefaultcarrySuitSprites;
+				carrySprites = DefaultcarrySprites;
+				suitSprites = DefaultsuitSprites;
+			}
+			else if (selectedSkin() == SkinDisplay.CAPE_SKIN) {
+				sprites = Capesprites;
+				carrySuitSprites = CapecarrySuitSprites;
+				carrySprites = CapecarrySprites;
+				suitSprites = CapesuitSprites;
+			}
+			else if (selectedSkin() == SkinDisplay.FAMILIARBOY_SKIN) {
+				sprites = FamiliarBoysprites;
+				carrySuitSprites = FamiliarBoycarrySuitSprites;
+				carrySprites = FamiliarBoycarrySprites;
+				suitSprites = FamiliarBoysuitSprites;
+			}
+	
+			else if (selectedSkin() == SkinDisplay.FAMILIARGIRL_SKIN) {
+				sprites = FamiliarGirlsprites;
+				carrySuitSprites = FamiliarGirlcarrySuitSprites;
+				carrySprites = FamiliarGirlcarrySprites;
+				suitSprites = FamiliarGirlsuitSprites;
+			}
+			else if (selectedSkin() == SkinDisplay.CUSTOM_SKIN) {
+				sprites = CustomSkinsprites;
+				carrySuitSprites = CustomSkincarrySuitSprites;
+				carrySprites = CustomSkincarrySprites;
+				suitSprites = CustomSkinsuitSprites;
+			}
+		
 		}
 
         if (activeItem instanceof FurnitureItem) {
