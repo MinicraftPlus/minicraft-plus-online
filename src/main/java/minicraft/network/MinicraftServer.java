@@ -443,7 +443,7 @@ public class MinicraftServer extends Thread implements MinicraftProtocol {
 					serverThread.sendError("Client Identity could not be verified.");
 					serverThread.endConnection(); //Bye.
 				}
-
+				
 				// check if the same username already exists on the server (due to signing on a second time with the same account), and if so, prevent the new login
 				if (getAssociatedThread(username) != null) {
 					serverThread.sendError("Account is already logged in to server");
@@ -673,7 +673,7 @@ public class MinicraftServer extends Thread implements MinicraftProtocol {
 					for (Item i: chest.getInventory().getItems())
 						itemDataB.append(i.getData()).append(";");
 					String itemData = itemDataB.toString();
-					itemData = itemData.length() == 0 ? itemData : itemData.substring(0, itemData.length()-1);
+					itemData = itemData.length() == 0 ? itemData : itemData.substring(0, itemData.length() - 1);
 					serverThread.sendItems(itemData);
 					serverThread.sendNotification("Death chest retrieved!", 0);
 					chest.remove();

@@ -65,6 +65,7 @@ import minicraft.level.tile.Tiles;
 import minicraft.network.MinicraftServer;
 import minicraft.screen.LoadingDisplay;
 import minicraft.screen.MultiplayerDisplay;
+import minicraft.screen.SkinDisplay;
 
 public class Load {
 	
@@ -318,7 +319,7 @@ public class Load {
 			Settings.set("fps", Integer.parseInt(data.remove(0)));
 
 		if (prefVer.compareTo(new Version("2.0.7-dev5")) >= 0)
-			Settings.setIdx("Skins", Integer.parseInt(data.remove(0)));
+			SkinDisplay.setSelectedSkinIndex(Integer.parseInt(data.remove(0)));
 
 		List<String> subdata;
 		
@@ -525,7 +526,7 @@ public class Load {
 		else
 			player.shirtColor = Integer.parseInt(data.remove(0));
 		
-		player.skinon = Boolean.parseBoolean(data.remove(0));
+		player.suitOn = Boolean.parseBoolean(data.remove(0));
 	}
 	
 	protected static String subOldName(String name, Version worldVer) {

@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
+import minicraft.util.Vector2;
 import org.jetbrains.annotations.Nullable;
 
 import minicraft.core.Game;
@@ -82,45 +81,18 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	// These 2 ints are ints saved from the first spawn - this way the spawn pos is always saved.
 	public int spawnx = 0, spawny = 0; // These are stored as tile coordinates, not entity coordinates.
 	//public boolean bedSpawn = false;
-	
-	//private boolean hasSetHome = false;
-	public boolean skinon;
-	//private int homeSetX, homeSetY;
+
+	public boolean suitOn;
 	
 	// The maximum stats that the player can have.
 	public static final int maxStat = 10;
 	public static final int maxHealth = maxStat, maxStamina = maxStat, maxHunger = maxStat;
 	public static final int maxArmor = 100;
 
-	public static MobSprite[][] Defaultsprites = MobSprite.compileMobSpriteAnimations(0, 16);
-	public static MobSprite[][] DefaultcarrySprites = MobSprite.compileMobSpriteAnimations(0, 18); // The sprites while carrying something.
-	private static MobSprite[][] DefaultsuitSprites = MobSprite.compileMobSpriteAnimations(8, 16); // The "airwizard suit" sprites.
-	private static MobSprite[][] DefaultcarrySuitSprites = MobSprite.compileMobSpriteAnimations(8, 18); // The "airwizard suit" sprites.
-
 	public static MobSprite[][] sprites;
 	public static MobSprite[][] carrySuitSprites;
 	public static MobSprite[][] carrySprites;
 	public static MobSprite[][] suitSprites;
-
-	public static MobSprite[][] Capesprites = MobSprite.compilePlayerSpriteAnimations(0, 0);
-	private static MobSprite[][] CapecarrySprites = MobSprite.compilePlayerSpriteAnimations(0, 2); // The sprites while carrying something.
-	private static MobSprite[][] CapesuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 0); // The "airwizard suit" sprites.
-	private static MobSprite[][] CapecarrySuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 2); // The "airwizard suit" sprites.
-
-	public static MobSprite[][] FamiliarBoysprites = MobSprite.compilePlayerSpriteAnimations(0, 4);
-	private static MobSprite[][] FamiliarBoycarrySprites = MobSprite.compilePlayerSpriteAnimations(0, 6); // The sprites while carrying something.
-	private static MobSprite[][] FamiliarBoysuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 4); // The "airwizard suit" sprites.
-	private static MobSprite[][] FamiliarBoycarrySuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 6); // The "airwizard suit" sprites.
-
-	public static MobSprite[][] FamiliarGirlsprites = MobSprite.compilePlayerSpriteAnimations(0, 8);
-	private static MobSprite[][] FamiliarGirlcarrySprites = MobSprite.compilePlayerSpriteAnimations(0, 10); // The sprites while carrying something.
-	private static MobSprite[][] FamiliarGirlsuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 8); // The "airwizard suit" sprites.
-	private static MobSprite[][] FamiliarGirlcarrySuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 10); // The "airwizard suit" sprites.
-
-	public static MobSprite[][] CustomSkinsprites = MobSprite.compilePlayerSpriteAnimations(0, 0);
-	private static MobSprite[][] CustomSkincarrySprites = MobSprite.compilePlayerSpriteAnimations(0, 2); // The sprites while carrying something.
-	private static MobSprite[][] CustomSkinsuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 0); // The "airwizard suit" sprites.
-	private static MobSprite[][] CustomSkincarrySuitSprites = MobSprite.compilePlayerSpriteAnimations(8, 2); // The "airwizard suit" sprites.
 
 	private Inventory inventory;
 	
@@ -230,6 +202,20 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			spawnx = previousInstance.spawnx;
 			spawny = previousInstance.spawny;
 		}
+
+		//Multiplayer Override
+		if (this instanceof RemotePlayer) {
+			SkinDisplay.setSelectedSkinIndex(0);
+		}
+
+		// Get the current skin we are using as a MobSprite array.
+		MobSprite[][][] selectedSkin = SkinDisplay.getSkinAsMobSprite();
+
+		// Assign the skin to the states.
+		sprites = selectedSkin[0];
+		carrySprites = selectedSkin[1];
+		suitSprites = selectedSkin[2];
+		carrySuitSprites = selectedSkin[3];
 	}
 	
 	public int getMultiplier() { return Game.isMode("score") ? multiplier : 1; }
@@ -438,26 +424,34 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (Updater.savecooldown > 0 && !Updater.saving)
 			Updater.savecooldown--;
 		
-		
+
+		// Handle player input. Input is handled by the menu if we are in one.
 		if (Game.getMenu() == null && !Bed.inBed(this)) {
-			// This is where movement detection occurs.
-			int xmov = 0, ymov = 0;
-			if (onFallDelay <= 0) { // prevent movement while falling
-				if (input.getKey("move-up").down) ymov--;
-				if (input.getKey("move-down").down) ymov++;
-				if (input.getKey("move-left").down) xmov--;
-				if (input.getKey("move-right").down) xmov++;
+			// Create the raw movement vector.
+			Vector2 vec = new Vector2(0, 0);
+
+			// Move while we are not falling.
+			if (onFallDelay <= 0) {
+				if (input.getKey("move-up").down) vec.y--;
+				if (input.getKey("move-down").down) vec.y++;
+				if (input.getKey("move-left").down) vec.x--;
+				if (input.getKey("move-right").down) vec.x++;
 			}
 			
 			// Executes if not saving; and... essentially halves speed if out of stamina.
-			if ((xmov != 0 || ymov != 0) && (staminaRechargeDelay % 2 == 0 || isSwimming()) && !Updater.saving) {
+			if ((vec.x != 0 || vec.y != 0) && (staminaRechargeDelay % 2 == 0 || isSwimming()) && !Updater.saving) {
 				double spd = moveSpeed * (potioneffects.containsKey(PotionType.Speed) ? 1.5D : 1);
-				int xd = (int) (xmov * spd);
-				int yd = (int) (ymov * spd);
+				int xd = (int) (vec.x * spd);
+				int yd = (int) (vec.y * spd);
+
 				Direction newDir = Direction.getDirection(xd, yd);
 				if (newDir == Direction.NONE) newDir = dir;
+
+				// On multiplayer move the local player.
 				if ((xd != 0 || yd != 0 || newDir != dir) && Game.isConnectedClient() && this == Game.player)
 					Game.client.move(this, x + xd, y + yd);
+
+				// Move the player
 				boolean moved = move(xd, yd); // THIS is where the player moves; part of Mob.java
 				if (moved) stepCount++;
 			}
@@ -821,64 +815,15 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return dmg;
 	}
 
-	public String selectedSkin() {
-		return SkinDisplay.SkinOutput;
-	}
-
 	@Override
 	public void render(Screen screen) {
-
 		MobSprite[][] spriteSet;
-		
-		if (this instanceof RemotePlayer) {
-			
-			sprites = CustomSkinsprites;
-			carrySuitSprites = CustomSkincarrySuitSprites;
-			carrySprites = CustomSkincarrySprites;
-			suitSprites = CustomSkinsuitSprites;
-			
-		} else {
-			
-			if (selectedSkin() == SkinDisplay.DEFAULT_SKIN) {
-				sprites = Defaultsprites;
-				carrySuitSprites = DefaultcarrySuitSprites;
-				carrySprites = DefaultcarrySprites;
-				suitSprites = DefaultsuitSprites;
-			}
-			else if (selectedSkin() == SkinDisplay.CAPE_SKIN) {
-				sprites = Capesprites;
-				carrySuitSprites = CapecarrySuitSprites;
-				carrySprites = CapecarrySprites;
-				suitSprites = CapesuitSprites;
-			}
-			else if (selectedSkin() == SkinDisplay.FAMILIARBOY_SKIN) {
-				sprites = FamiliarBoysprites;
-				carrySuitSprites = FamiliarBoycarrySuitSprites;
-				carrySprites = FamiliarBoycarrySprites;
-				suitSprites = FamiliarBoysuitSprites;
-			}
-	
-			else if (selectedSkin() == SkinDisplay.FAMILIARGIRL_SKIN) {
-				sprites = FamiliarGirlsprites;
-				carrySuitSprites = FamiliarGirlcarrySuitSprites;
-				carrySprites = FamiliarGirlcarrySprites;
-				suitSprites = FamiliarGirlsuitSprites;
-			}
-			else if (selectedSkin() == SkinDisplay.CUSTOM_SKIN) {
-				sprites = CustomSkinsprites;
-				carrySuitSprites = CustomSkincarrySuitSprites;
-				carrySprites = CustomSkincarrySprites;
-				suitSprites = CustomSkinsuitSprites;
-			}
-		
-		}
 
         if (activeItem instanceof FurnitureItem) {
-            spriteSet = skinon ? carrySuitSprites : carrySprites;
+            spriteSet = suitOn ? carrySuitSprites : carrySprites;
         } else {
-            spriteSet = skinon ? suitSprites : sprites;
+            spriteSet = suitOn ? suitSprites : sprites;
         }
-
 
 
 		/* Offset locations to start drawing the sprite relative to our position */
@@ -1201,7 +1146,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	protected String getUpdateString() {
 		String updates = super.getUpdateString() + ";";
-		updates += "skinon," + skinon +
+		updates += "skinon," + suitOn +
 		";shirtColor," + shirtColor +
 		";armor," + armor +
 		";stamina," + stamina +
@@ -1219,7 +1164,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	protected boolean updateField(String field, String val) {
 		if (super.updateField(field, val)) return true;
 		switch (field) {
-			case "skinon": skinon = Boolean.parseBoolean(val); return true;
+			case "skinon": suitOn = Boolean.parseBoolean(val); return true;
 			case "shirtColor": shirtColor = Integer.parseInt(val); return true;
 			case "armor": armor = Integer.parseInt(val); return true;
 			case "stamina": stamina = Integer.parseInt(val); return true;
