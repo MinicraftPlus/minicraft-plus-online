@@ -12,10 +12,18 @@ Feel free to open any issues if you find bugs related to the multiplayer functio
 If you want to improve the code or fix it, feel free to open a pull request.
 ## Special thanks
 Thanks to Markus Persson, who developed Minicraft and opened its source.
+
 Thanks to Chris J, who leads Minicraft+ development.
+
+Thanks to Makkkkus, who maintains the Minicraft+ Repo.
+
 Thanks to Shylor, who hosts and maintains [The Minicraft Website](https://playminicraft.com/).
+
 Thanks to Dillyg10 and Davideesk, the inital developers of Minicraft+.
+
 Thanks to all the persons who helped me through the port development (The ones who report bugs, the ones who create pull requests and Chris.)
+
 And thanks to you for supporting the Minicraft+ project by playing it.
+
 ## Legal notice
 I am not the creator of [Minicraft](https://playminicraft.com/)(See footer) or [Minicraft+](https://github.com/chrisj42/minicraft-plus-revived), their respective authors (Markus "Notch" Persson & Chris) are. This repository is distributed with the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
