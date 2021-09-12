@@ -202,6 +202,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			spawnx = previousInstance.spawnx;
 			spawny = previousInstance.spawny;
 		}
+		
+		suitOn = (boolean) Settings.get("skinon");
 
 		//Multiplayer Override
 		if (this instanceof RemotePlayer) {
@@ -824,7 +826,6 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
         } else {
             spriteSet = suitOn ? suitSprites : sprites;
         }
-
 
 		/* Offset locations to start drawing the sprite relative to our position */
 		int xo = x - 8; // Horizontal

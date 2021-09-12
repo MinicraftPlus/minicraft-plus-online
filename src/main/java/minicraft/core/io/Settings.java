@@ -4,6 +4,8 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 
+import minicraft.core.Game;
+import minicraft.level.Level;
 import minicraft.screen.SkinDisplay;
 import minicraft.screen.entry.ArrayEntry;
 import minicraft.screen.entry.BooleanEntry;
@@ -45,6 +47,12 @@ public class Settings {
 			options.get("skinon").setVisible((boolean)value)
 		);
 
+		options.get("skinon").setChangeAction(value -> {
+			if (Game.player != null) {
+				Game.player.suitOn = (boolean) value;
+			}
+		});
+		
 		options.put("textures", new ArrayEntry<>("textures", "Original", "Custom"));
 		options.get("textures").setSelection(0);
 	}

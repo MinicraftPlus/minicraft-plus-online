@@ -57,8 +57,8 @@ public class Menu {
 	/**
 	 * If there's searcher bar in menu
 	 */
-	private boolean searcherBar;
-	private boolean toggleSearcherBar;
+	private boolean useSearcherBar = false;
+	private boolean searcherBarActive = false;
 	private List<Integer> listSearcher;
 	private int listPositionSearcher;
 	private int selectionSearcher;
@@ -88,7 +88,7 @@ public class Menu {
 		dispSelection = m.dispSelection;
 		offset = m.offset;
 
-		searcherBar = m.searcherBar;
+		useSearcherBar = m.useSearcherBar;
 		selectionSearcher = 0;
 		listSearcher = new ArrayList<>();
 		listPositionSearcher = 0;
@@ -163,27 +163,29 @@ public class Menu {
 		if (input.getKey("shift-cursor-down").clicked && selectionSearcher == 0) selectionSearcher += 2;
 		if (prevSel != selection && selectionSearcher != 0) selection = prevSel;
 
-		if (searcherBar && input.getKey("searcher-bar").clicked) {
-			toggleSearcherBar = !toggleSearcherBar;
-			input.addKeyTyped("", null); // clear pressed key
-		}
+		if (useSearcherBar) {
+			if (input.getKey("searcher-bar").clicked) {
+				searcherBarActive = !searcherBarActive;
+				input.addKeyTyped("", null); // clear pressed key
+			}
 
-		if (!listSearcher.isEmpty() && selectionSearcher == 0) {
-			int speed = input.getKey("PAGE-UP").clicked ? -1 : input.getKey("PAGE-DOWN").clicked ? 1 : 0;
-			if (speed != 0) {
-				int listPosition = listPositionSearcher + speed;
-				if (listPosition < 0) {
-					listPosition = listSearcher.size() - 1;
+			if (!listSearcher.isEmpty() && selectionSearcher == 0) {
+				int speed = input.getKey("PAGE-UP").clicked ? -1 : input.getKey("PAGE-DOWN").clicked ? 1 : 0;
+				if (speed != 0) {
+					int listPosition = listPositionSearcher + speed;
+					if (listPosition < 0) {
+						listPosition = listSearcher.size() - 1;
+					}
+					listPositionSearcher = listPosition % listSearcher.size();
+					int position = listSearcher.get(listPositionSearcher);
+
+					int difference = position - selection;
+					selectionSearcher = difference > position ? -difference : difference;
 				}
-				listPositionSearcher = listPosition % listSearcher.size();
-				int position = listSearcher.get(listPositionSearcher);
-
-				int difference = position - selection;
-				selectionSearcher = difference > position ? -difference : difference;
 			}
 		}
 
-		if (toggleSearcherBar && searcherBar) {
+		if (searcherBarActive) {
 			String typingSearcher = input.addKeyTyped(this.typingSearcher, null);
 			for (String pressedKey : input.getAllPressedKeys()) {
 				if (pressedKey.equals("ENTER")) {
@@ -211,7 +213,6 @@ public class Menu {
 						if (shouldSelect) {
 							int difference = i - selection;
 							selectionSearcher = difference > i ? -difference : difference;
-
 							shouldSelect = false;
 						}
 
@@ -294,7 +295,7 @@ public class Menu {
 		}
 
 		// render searcher bar
-		if (toggleSearcherBar && searcherBar) {
+		if (searcherBarActive && useSearcherBar) {
 			int spaceWidth = Font.textWidth(" ");
 			int leading = typingSearcher.length() * spaceWidth / 2;
 			// int xSearcherBar = titleLoc.x + title.length() * spaceWidth / 3 - title.length() / 2;
@@ -330,7 +331,7 @@ public class Menu {
 			if(!(entry instanceof BlankEntry)) {
 				Point pos = entryPos.positionRect(new Dimension(entry.getWidth(), ListEntry.getHeight()), new Rectangle(entryBounds.getLeft(), y, entryBounds.getWidth(), ListEntry.getHeight(), Rectangle.CORNER_DIMS));
 				boolean selected = idx == selection;
-				if (toggleSearcherBar && searcherBar) {
+				if (searcherBarActive && useSearcherBar) {
 					entry.render(screen, pos.x, pos.y, selected, typingSearcher, Color.YELLOW);
 				} else {
 					entry.render(screen, pos.x, pos.y, selected);
@@ -641,7 +642,7 @@ public class Menu {
 			if(padding > 1) padding = 1;
 			menu.padding = (int)Math.floor(padding * menu.displayLength / 2);
 
-			menu.searcherBar = searcherBar;
+			menu.useSearcherBar = searcherBar;
 			
 			// done setting defaults/values; return the new menu 
 			
