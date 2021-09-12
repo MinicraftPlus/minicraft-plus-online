@@ -11,7 +11,7 @@ This port tries to mirror the [Minicraft+ Repository](https://github.com/chrisj4
 Feel free to open any issues if you find bugs related to the multiplayer functionality, if it's a base game bug open it [here](https://github.com/chrisj42/minicraft-plus-revived/issues).
 If you want to improve the code or fix it, feel free to open a pull request.
 ## Special thanks
-Thanks to Markus Persson, who developed Minicraft and opened its source.
+Thanks to Markus Persson, who developed Minicraft.
 
 Thanks to Chris J, who leads Minicraft+ development.
 
