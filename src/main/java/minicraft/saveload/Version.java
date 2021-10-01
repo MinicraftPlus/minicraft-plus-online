@@ -56,8 +56,8 @@ public class Version implements Comparable<Version> {
 			return Integer.compare(dev, ov.dev);
 		}
 		if (toString().contains("net") != ov.toString().contains("net")) {
-			if (toString().contains("net")) return 1;
-			else return -1;
+			if (toString().contains("net")) return -1;
+			else return 1;
 		}
 		return 0; // the versions are equal.
 	}

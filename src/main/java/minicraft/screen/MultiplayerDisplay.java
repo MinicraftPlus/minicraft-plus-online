@@ -155,7 +155,7 @@ public class MultiplayerDisplay extends Display {
 			
 			@Override
 			public void failed(UnirestException e) {
-				System.err.println("Website ping failed: "+e.getMessage());
+				System.err.println("Website ping failed: " + e.getMessage());
 				if(!e.getMessage().equalsIgnoreCase("connection reset by peer"))
 					e.printStackTrace();
 				cancelled();
