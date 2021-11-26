@@ -5,6 +5,7 @@ On the 20th of August 2021, Chris J. ([chris42](https://github.com/chrisj42)) an
 This is only a port of [Minicraft+](https://github.com/chrisj42/minicraft-plus-revived), which is developed by the community, by which I mean, I only make sure the multiplayer is working.
 ## Getting Started
 If you want to play minicraft+ online, you should create an account [here](https://minicraft.slowflow.ml).
+If you need any help, or just want to hand out, feel free to join #minicraft on [IRC](https://irc.slowflow.ml:2083).
 ## What are the objectives of this port?
 This port tries to mirror the [Minicraft+ Repository](https://github.com/chrisj42/minicraft-plus-revived) and aims to add support for multiplayer, make it more secure, introduce improvements and fix multiplayer related bugs.
 ## Contributing
