@@ -6,7 +6,7 @@ This is only a port of [Minicraft+](https://github.com/chrisj42/minicraft-plus-r
 ## Getting Started
 If you want to play minicraft+ online, you should create an account [here](https://minicraft.slowflow.ml).
 
-If you need any help, or just want to hand out, feel free to join #minicraft on [IRC](https://irc.slowflow.ml:2083).
+If you need any help, or just want to hang out, feel free to join #minicraft on [IRC](https://irc.slowflow.ml/#minicraft).
 ## What are the objectives of this port?
 This port tries to mirror the [Minicraft+ Repository](https://github.com/chrisj42/minicraft-plus-revived) and aims to add support for multiplayer, make it more secure, introduce improvements and fix multiplayer related bugs.
 ## Contributing
