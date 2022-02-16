@@ -28,4 +28,4 @@ Thanks to all the persons who helped me through the port development (The ones w
 And thanks to you for supporting the Minicraft+ project by playing it.
 
 ## Legal notice
-I am not the creator of [Minicraft](https://playminicraft.com/)(See footer) or [Minicraft+](https://github.com/chrisj42/minicraft-plus-revived), their respective authors (Markus "Notch" Persson & Chris) are. This repository is distributed with the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
+I am not the creator of [Minicraft](https://playminicraft.com/)(See footer) or [Minicraft+](https://github.com/chrisj42/minicraft-plus-revived), their respective authors (Markus "Notch" Persson, Dillyg10 & Davideesk) are. This repository is distributed with the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
