@@ -63,8 +63,7 @@ import org.json.JSONObject;
 
 public class MultiplayerDisplay extends Display {
 	
-	//private static final String domain = "https://playminicraft.com";
-	private static final String domain = "https://minicraft.slowflow.ml";
+	private static final String domain = "https://min.ilsrv.com";
 	public static final String apiDomain = domain+"/api";
 	
 	public static String savedIP = "";
