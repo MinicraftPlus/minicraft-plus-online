@@ -1,4 +1,8 @@
 # Minicraft Plus Online
+
+## Annexed into MinicraftPlus Organization
+Maintainer Litorom(1) will update this eventually until the re-release of a more stable multiplayer.
+
 ## Introduction
 On the 20th of August 2021, Chris J. ([chris42](https://github.com/chrisj42)) announced in the [Official Minicraft+ Discord Server](https://discord.gg/JyvFcRBguE) that the multiplayer functionality would be disabled from then on due to bad implementation and login server issues. It was at this point that I decided to make a port to keep multiplayer alive as I consider it's one of minicraft most important features. This is why this repository was created.
 ## Relation with Minicraft+
